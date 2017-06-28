@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 import { FormControl, Button, Grid } from 'react-bootstrap';
 import $ from 'jquery';
 import Drop from './components/nav.jsx';
+import Upload from './components/upload.jsx';
+import PairingList from './components/pairingList.jsx';
 
 
 class App extends React.Component {
@@ -10,7 +12,11 @@ class App extends React.Component {
     super(props);
     this.state = {
       item: '',
-      prefer: ''
+      prefer: '',
+      pairs: {
+        finalRecipes: [],
+        finalWines: []
+      }
     };
     this.search = this.search.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -41,8 +47,11 @@ class App extends React.Component {
         item: this.state.item,
         choices: passPref
       },
-      success: function(data) {
+      success: data => {
         console.log('success', data);
+        this.setState({
+          pairs: data
+        })
       }
     });
   }
@@ -59,10 +68,12 @@ class App extends React.Component {
       <Grid style={styles.container}>
         <h1 style={styles.h1}>App 4 Food</h1>
         <Drop handlePreferences={this.handlePref.bind(this)}/>
+        <Upload />
         <form style={styles.form}>
           <FormControl style={styles.inputBox} bsSize="small" type="text" placeholder="Search here" onChange={this.handleChange} />
           <Button type="button" bsSize="small" onClick={this.search}>Submit</Button>
         </form>
+        <PairingList pairs={this.state.pairs} />
       </Grid>
     )
   }

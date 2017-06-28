@@ -10,21 +10,27 @@
   "scripts": {
     "react-dev": "webpack -d --watch",
     "server-dev": "nodemon server/server.js",
-    "db-start": "mongod --dbpath ./database/data/db",
-    "start": "node server/server.js",
-    "heroku-postbuild": "webpack -p"
+    "db-start": "mongod --dbpath ./database/data/db"
   },
   "dependencies": {
     "axios": "^0.16.2",
     "bluebird": "^3.5.0",
     "body-parser": "^1.17.2",
+    "clarifai": "^2.2.0",
     "express": "^4.15.0",
     "jquery": "^3.1.1",
     "mongoose": "^4.8.6",
     "react": "^15.4.2",
     "react-bootstrap": "^0.31.0",
     "react-dom": "^15.4.2",
+<<<<<<< HEAD
     "request": "^2.81.0"
+=======
+    "react-dropzone": "^3.13.3",
+    "request": "^2.81.0",
+    "superagent": "^3.5.2",
+    "underscore": "^1.8.3"
+>>>>>>> d741117afea5c40dd967c822597fb8b27f311da6
   },
   "devDependencies": {
     "babel-cli": "^6.7.5",
