@@ -6,13 +6,20 @@ const wine = require('./wineRefactor.js');
 const api = require('./config.js');
 const axios = require('axios');
 
-const apiQuery = (food, res) => {
+const apiQuery = (data, res) => {
   let finalResults = {
     finalRecipes: [],
     finalWines: []
   };
-  
-  axios.post('https://api.edamam.com/search?q=' + food, { "app_id": api.recipe_appId, "app_key": api.recipe_appkey })
+  let url = 'https://api.edamam.com/search?q=' + data.item;
+  if (data.choices) {
+    let choices = data.choices;
+    for (let i = 0; i < choices.length; i++) {
+      url += '&health=' + choices[i];
+    }
+  }
+  console.log('url', url);
+  axios.post(url, { "app_id": api.recipe_appId, "app_key": api.recipe_appkey })
   .then((result) => {
     return recipe.refactor(result.data.hits);
   })

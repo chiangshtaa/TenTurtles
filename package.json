@@ -23,14 +23,10 @@
     "react": "^15.4.2",
     "react-bootstrap": "^0.31.0",
     "react-dom": "^15.4.2",
-<<<<<<< HEAD
-    "request": "^2.81.0"
-=======
     "react-dropzone": "^3.13.3",
     "request": "^2.81.0",
     "superagent": "^3.5.2",
     "underscore": "^1.8.3"
->>>>>>> d741117afea5c40dd967c822597fb8b27f311da6
   },
   "devDependencies": {
     "babel-cli": "^6.7.5",
