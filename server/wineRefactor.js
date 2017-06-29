@@ -1,12 +1,11 @@
 const refactor = wines => {
-  return wines.map(item => {
-    return {
-      name: item.Name,
-      url: item.Url,
-      labelUrl: item.Labels[0].Url,
-      type: item.Varietal.WineType.Name
-    };
-  });
+  let random = Math.floor(Math.random() * (wines.length - 2)) + 1;
+  return {
+    name: wines[random].Name,
+    url: wines[random].Url,
+    labelUrl: wines[random].Labels[0].Url,
+    type: wines[random].Varietal.WineType.Name
+  };
 };
 
 module.exports.refactor = refactor;

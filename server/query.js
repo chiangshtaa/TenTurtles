@@ -18,7 +18,7 @@ const apiQuery = (data, res) => {
       url += '&health=' + choices[i];
     }
   }
-  console.log('url', url);
+  console.log(url);
   axios.post(url, { "app_id": api.recipe_appId, "app_key": api.recipe_appkey })
   .then((result) => {
     return recipe.refactor(result.data.hits);
@@ -41,14 +41,15 @@ const apiQuery = (data, res) => {
   .then(wines => {
     return Promise.map(wines, wineArray => {
       let random = Math.floor(Math.random() * wineArray.length);
-      return axios.get('http://services.wine.com/api/beta2/service.svc/JSON/catalog?sortBy=rating|descending&apikey=' + api.wine_key, {"search": wineArray[random]}).then(result => {
+      return axios.get('http://services.wine.com/api/beta2/service.svc/JSON/catalog?filter=price(0|100)&state=CA&apikey=' + api.wine_key, {"search": wineArray[random]}).then(result => {
         return wine.refactor(result.data.Products.List);
       });
     });
   })
   .then(wines => {
+    console.log('wineeee')
     wines.map(wine => {
-      finalResults.finalWines.push(wine);
+      finalResults.finalWines.push([wine]);
     });
   })
   .then( () => {
