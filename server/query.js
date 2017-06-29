@@ -42,6 +42,7 @@ const apiQuery = (data, res) => {
     return Promise.map(wines, wineArray => {
       let random = Math.floor(Math.random() * wineArray.length);
       return axios.get('http://services.wine.com/api/beta2/service.svc/JSON/catalog?filter=price(0|100)&state=CA&apikey=' + api.wine_key, {"search": wineArray[random]}).then(result => {
+        console.log('wines:::::: ', result.data.Products.List[0]);
         return wine.refactor(result.data.Products.List);
       });
     });

@@ -4,7 +4,10 @@ const refactor = wines => {
     name: wines[random].Name,
     url: wines[random].Url,
     labelUrl: wines[random].Labels[0].Url,
-    type: wines[random].Varietal.WineType.Name
+    type: wines[random].Varietal.Name,
+    region: wines[random].Appellation.Name,
+    rating: wines[random].Ratings.HighestScore,
+    price: wines[random].Retail.Price
   };
 };
 
