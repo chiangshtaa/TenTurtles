@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Row, Col, Image, Modal, Button, ListGroup, ListGroupItem, Accordion, Panel } from 'react-bootstrap';
+import { Grid, Row, Col, Image, Modal, Button, ListGroup, ListGroupItem, Accordion, Panel, Media} from 'react-bootstrap';
 
 import $ from 'jquery';
 
@@ -8,36 +8,12 @@ class pairingListEntry extends React.Component {
     super(props);
     this.state = {
       open: false,
-      showModal: false,
       favorite: false
     };
   }
 
-  getInitialState() {
-    return {
-      showModal: false
-    };
-  }
-
-  close() {
-    this.setState({
-      showModal: false
-    });
-  }
-
-  open() {
-    this.setState({
-      showModal: true
-    });
-  }
-
   favorite(pairing) {
     let that = this;
-    // console.log(pairing);
-    // this.setState({
-    //   favorite: !this.state.favorite
-    // }, () => console.log(this.state.favorite));
-    console.log(that.state.favorite);
     $.ajax({
       url: '/favorite',
       method: 'POST',
@@ -46,15 +22,14 @@ class pairingListEntry extends React.Component {
         favorite: that.state.favorite
       },
       success: (result) => {
-        console.log('result', result);
         that.setState({
           favorite: !that.state.favorite
-        })
+        });
       },
       error: (error) => {
         console.log('error', error);
       }
-    })
+    });
   }
 
   render() {
@@ -62,7 +37,7 @@ class pairingListEntry extends React.Component {
       <Accordion>
         <Panel header={
           <Grid style={styles.container}>
-            <Row onClick={this.open.bind(this)}>
+            <Row >
               <Col xs={5}>
                 <Image style={styles.thumbnail} src={this.props.pair[0].image} rounded />
               </Col>
@@ -73,15 +48,16 @@ class pairingListEntry extends React.Component {
                 <Row style={styles.drinkName}>
                   {this.props.pair[1][0].name}
                 </Row>
+                <Row style={styles.drinkName}>
+                  {this.props.pair[2][0].name}
+                </Row>
               </Col>
             </Row>
           </Grid>
         } eventKey="1">
           <Grid style={styles.container}>
-
             <h2 style={styles.h2} ><a href={this.props.pair[0].url}>{this.props.pair[0].label}</a></h2>
-            <button style={this.state.favorite ? styles.favorite : styles.unfavorite} onClick={this.favorite.bind(this, this.props.pair)}> Favorite </button>
-
+            <Image src={this.state.favorite ? "https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/Love_Heart_SVG.svg/2000px-Love_Heart_SVG.svg.png" : "http://www.smfpl.org/files/images/broken%20heart.png"} style={styles.favorite} onClick={this.favorite.bind(this, this.props.pair)}></Image>
             <Row>
               <Col xs={12}>
                 <ListGroup style={styles.listGroup}>
@@ -98,29 +74,48 @@ class pairingListEntry extends React.Component {
 
             <hr />
 
-            <h2><a href={this.props.pair[1][0].url}>{this.props.pair[1][0].name}</a></h2>
-
+            <h2 style={styles.h2Logo}><a href={this.props.pair[1][0].url}>{this.props.pair[1][0].name}</a></h2>
+            {/*wine section*/}
             <Row>
-              <Col xs={3}>
+              <Col xs={3} style={{height: '240px'}}>
                 <Image style={styles.block} src={this.props.pair[1][0].labelUrl} rounded />
+                <hr />
                 <a href="http://www.wine.com/" title="Wine.com the destination for Wine and Wine Gifts">
-                  <img src="http://cache.wine.com/images/logos/80x20_winecom_logo.png" alt="Wine.com the destination for Wine and Wine Gifts" />
+                  <img style={styles.logo} src="http://cache.wine.com/images/logos/80x20_winecom_logo.png" alt="Wine.com the destination for Wine and Wine Gifts" />
                 </a>
               </Col>
               <Col xs={9}>
                 <ListGroup style={styles.listGroup}>
-                  <p><span style={styles.bold}>Varietal: </span>{this.props.pair[1][0].type}</p>
-                  <p><span style={styles.bold}>Region: </span>{this.props.pair[1][0].region}</p>
-                  <p><span style={styles.bold}>Rating: </span>{this.props.pair[1][0].rating}</p>
-                  <p><span style={styles.bold}>Price: </span>${this.props.pair[1][0].price}</p>
+                  <p style={styles.p}><span style={styles.bold}>Varietal: </span>{this.props.pair[1][0].type}</p>
+                  <p style={styles.p}><span style={styles.bold}>Region: </span>{this.props.pair[1][0].region}</p>
+                  <p style={styles.p}><span style={styles.bold}>Rating: </span>{this.props.pair[1][0].rating}</p>
+                  <p style={styles.p}><span style={styles.bold}>Price: </span>${this.props.pair[1][0].price}</p>
                 </ListGroup>
               </Col>
             </Row>
+
+            <hr />
+            {/*beer section*/}
+            <h2 style={styles.h2Logo}><a href={this.props.pair[2][0].url}>{this.props.pair[2][0].name}</a></h2>
+
+            <Row>
+              <Col xs={3} style={{height: '240px'}}>
+                <Image style={styles.block} src={this.props.pair[2][0].image} rounded />
+                <hr />
+                <img style={styles.logo} src="http://s3.amazonaws.com/brewerydb/Powered-By-BreweryDB.png" alt="The BreweryDB API is owned by BreweryDB" />
+              </Col>
+              <Col xs={9}>
+                <ListGroup style={styles.listGroup}>
+                  <p style={styles.p}><span style={styles.bold}>Style: </span>{this.props.pair[2][0].style}</p>
+                  <p style={styles.p}><span style={styles.bold}>Description: </span>{this.props.pair[2][0].description}</p>
+                </ListGroup>
+              </Col>
+            </Row>
+
           </Grid>
         </Panel>
       </Accordion>
-
-    )
+    );
   }
 }
 
@@ -131,23 +126,25 @@ let styles = {
     width: '100%',
     padding: '10px'
   },
-  bottomBorder: {
-    bottomBorder: '1px solid black'
-  },
   listGroup: {
     verticalAlign: 'center',
-    fontSize: '25px',
+    fontSize: '24px',
     marginRight: '10px',
-    padding: '5px',
-    border: '1px dashed black'
+    padding: '30px',
+    border: 'outset'
+  },
+  p: {
+    fontSize: '24px',
+    marginBottom: '13px'
   },
   recipeName: {
+    textDecoration: 'none',
     fontWeight: 'bold',
     fontSize: '36px'
   },
   drinkName: {
-    fontStyle: 'italics',
-    fontSize: '36px'
+    fontStyle: 'italic',
+    fontSize: '26px'
   },
   thumbnail: {
     height: '200px',
@@ -158,10 +155,14 @@ let styles = {
     width: 'auto'
   },
   block: {
-    display: 'block'
+    display: 'block',
+    marginLeft: '30px',
+    height: '125px',
+    marginTop: '30px'
   },
   bold: {
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    fontSize: '24px'
   },
   italics: {
     fontStyle: 'italic'
@@ -169,76 +170,26 @@ let styles = {
   smallFont: {
     fontSize: '10px'
   },
-  favorite: {
-    backgroundColor: '#ff0000',
-    float: 'right',
-    color: 'white'
-  },
-  unfavorite: {
-    backgroundColor: '#c4c3c2',
-    float: 'right'
-  },
   h2: {
-    float: 'left'
+    float: 'left',
+    padding: '0 30px 15px'
+  },
+  h2Logo: {
+    fontSize: '30px',
+    padding: '15px 0 15px 30px'
+  },
+  favorite: {
+    float: 'right',
+    height: '50px',
+    width: '50px',
+    backgroundPosition: 'center center',
+    backgroundRepeat: 'no-repeat',
+    backgroundSize: 'contain',
+    fontSize: '35px',
+    border: 'none'
+  },
+  logo: {
+    height: '25px',
+    marginLeft: '40px'
   }
-}
-        // <Row onClick={this.open.bind(this)}>
-        //   <Col xs={4}>
-        //     <Image style={styles.thumbnail} src={this.props.pair[0].image} rounded />
-        //   </Col>
-        //   <Col xs={6}>
-        //     <Row style={styles.bold}>
-        //       <p>{this.props.pair[0].label}</p>
-        //     </Row>
-        //     <Row style={styles.italics}>
-        //       {this.props.pair[1][0].name}
-        //     </Row>
-        //   </Col>
-        // </Row>
-        // <Modal show={this.state.showModal} onHide={this.close.bind(this)}>
-        //   <Modal.Header closeButton>
-        //     <Modal.Title><a href={this.props.pair[0].url}>{this.props.pair[0].label}</a></Modal.Title>
-        //   </Modal.Header>
-        //   <Modal.Body>
-        //     <Grid style={styles.bottomBorder}>
-        //       <Row>
-        //         <Col xs={3}>
-        //           <Image style={styles.image} src={this.props.pair[0].image} rounded />
-        //         </Col>
-        //         <Col xs={3}>
-        //           <ListGroup style={styles.listGroup}>
-        //             {
-        //               this.props.pair[0].ingredients.map((ingredient, i) => {
-        //                 return <p key={i} >{ingredient.text}</p>
-        //               })
-        //             }
-        //           </ListGroup>
-        //         </Col>
-        //       </Row>
-
-            // <h4><a href={this.props.pair[1][0].url}>{this.props.pair[1][0].name}</a></h4>
-
-            //   <Row>
-            //     <Col xs={3}>
-            //       <Image style={styles.block} src={this.props.pair[1][0].labelUrl} rounded />
-            //       <a href="http://www.wine.com/" title="Wine.com the destination for Wine and Wine Gifts">
-            //         <img src="http://cache.wine.com/images/logos/80x20_winecom_logo.png" alt="Wine.com the destination for Wine and Wine Gifts" />
-            //       </a>
-            //     </Col>
-            //     <Col xs={3}>
-            //       <ListGroup style={styles.listGroup}>
-            //         <p><span style={styles.bold}>Varietal: </span>{this.props.pair[1][0].type}</p>
-            //         <p><span style={styles.bold}>Region: </span>{this.props.pair[1][0].region}</p>
-            //         <p><span style={styles.bold}>Rating: </span>{this.props.pair[1][0].rating}</p>
-            //         <p><span style={styles.bold}>Price: </span>${this.props.pair[1][0].price}</p>
-            //       </ListGroup>
-            //     </Col>
-      //       //   </Row>
-
-
-      //     </Modal.Body>
-      //     <Modal.Footer>
-      //       <Button onClick={this.close.bind(this)}>Close</Button>
-      //     </Modal.Footer>
-      //   </Modal>
-      // </Grid>
+};

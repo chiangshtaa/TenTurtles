@@ -1,10 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { FormControl, Button, Grid } from 'react-bootstrap';
+import { FormControl, Button, Grid, Row, Col, Image, Carousel } from 'react-bootstrap';
 import $ from 'jquery';
 import Drop from './components/nav.jsx';
 import Upload from './components/upload.jsx';
 import PairingList from './components/pairingList.jsx';
+import ImageCarousel from './components/imageCarousel.jsx';
+import { Line, Circle } from 'rc-progress';
+import Background from '../image/butcher-block-161.jpg';
+const prefHelper = require('../../server/preferenceRefactor');
 
 
 class App extends React.Component {
@@ -15,32 +19,37 @@ class App extends React.Component {
       prefer: '',
       pairs: {
         finalRecipes: [],
-        finalWines: []
-      }
+        finalWines: [],
+        finalBeers: []
+      },
+      images: [],
+      percent: 0
     };
     this.search = this.search.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.changePercentage = this.changePercentage.bind(this);
   }
 
   handleChange(event) {
+    event.preventDefault();
     this.setState({
       item: event.target.value
     });
   }
 
+  changePercentage(percentage) {
+    this.setState({ percent: percentage });
+  }
+
   search(e) {
     e.preventDefault();
-    console.log('click');
-    let passPref = [];
-    for (let key in this.state.prefer) {
-      if (key !== 'open' && key !== 'preferences') {
-        console.log('true or false', this.state.prefer[key]);
-        if (this.state.prefer[key] === true) {
-          passPref.push(key);
-        }
-      }
-    }
-    console.log('passPref', passPref);
+    let passPref = prefHelper.preferences(this.state.prefer);
+    this.setState({ percent: 10 })
+    setTimeout(function(){ this.setState({ percent: 10 }) }.bind(this), 500);
+    setTimeout(function(){ this.setState({ percent: 25 }) }.bind(this), 1000);
+    setTimeout(function(){ this.setState({ percent: 40 }) }.bind(this), 1500);
+    setTimeout(function(){ this.setState({ percent: 60 }) }.bind(this), 2000);
+    setTimeout(function(){ this.setState({ percent: 80 }) }.bind(this), 3000);
     $.ajax({
       url: '/search',
       method: 'POST',
@@ -49,10 +58,22 @@ class App extends React.Component {
         choices: passPref || null
       },
       success: data => {
-        console.log('success', data);
+        this.setState({ percent: 100 })
         this.setPairings(data);
       }
     });
+  }
+
+  componentDidMount() {
+      $.ajax({
+        url: '/images',
+        method: 'GET',
+        success: data => {
+          this.setState({
+            images: data
+          });
+        }
+      })
   }
 
   setPairings(data) {
@@ -62,32 +83,71 @@ class App extends React.Component {
   }
 
   handlePref(childState) {
-    console.log('working appjsx');
     this.setState({
       prefer: childState
-    }, () => {console.log(this.state)});
+    });
   }
 
   render() {
     return (
       <Grid style={styles.container}>
-        <h1 style={styles.h1}>PAIRED</h1>
-        <Upload setPairings={this.setPairings.bind(this)}/>
-        <Drop handlePreferences={this.handlePref.bind(this)}/>
-        <hr />
-        <form style={styles.form}>
-          <FormControl style={styles.inputBox} bsSize="large" type="text" placeholder="Search here" onChange={this.handleChange} />
-          <Button style={styles.inputBox} type="submit" bsSize="large" onClick={this.search}>Submit</Button>
-        </form>
-        <PairingList pairs={this.state.pairs} />
+        <section style={ sectionStyle }>
+          <Line percent={this.state.percent} strokeWidth="2" strokeColor="#D3D3D3" />
+          <h1 style={styles.h1}>🍷🍅🍉🍊🍌🍍🍺🍲🍦</h1>
+          <Row>
+              <Col xs={2}>
+                <Upload setPairings={this.setPairings.bind(this)} preferences={this.state.prefer} changePercentage={this.changePercentage} />
+              </Col>
+              <form style={styles.form}>
+              <Col xs={9}>
+                <FormControl style={styles.inputBox} bsSize="large" type="text" placeholder="Search here" onChange={this.handleChange} />
+              </Col>
+              <Col xs={1}>
+                <input src="http://www.clker.com/cliparts/Y/x/X/j/U/f/search-button-without-text-hi.png" style={styles.inputBtn} type="image" onClick={this.search}></input>
+              </Col>
+            </form>
+          </Row>
+
+          <br />
+
+          <Row>
+            <Col xs={12}>
+              <Drop handlePreferences={this.handlePref.bind(this)}/>
+            </Col>
+
+          </Row>
+
+          <hr />
+
+          <Row>
+
+            <ImageCarousel images={this.state.images} />
+
+          </Row>
+
+          <hr />
+
+          <Row>
+            <Col xs={12}>
+              <PairingList pairs={this.state.pairs} />
+            </Col>
+          </Row>
+        </section>
       </Grid>
     )
   }
 }
 
+var sectionStyle = {
+  width: "100%",
+  height: "100%",
+  backgroundImage: `url(${Background})`,
+  backgroundSize: 'cover',
+};
+
 let styles = {
   h1: {
-    fontSize: '55px',
+    fontSize: '85px',
     textAlign: 'center'
   },
   container: {
@@ -95,15 +155,17 @@ let styles = {
     padding: '10px',
   },
   form: {
-    padding: '10px'
   },
   inputBox: {
     fontSize: '35px',
-    marginTop: '10px',
-    display: 'inline-block',
+    marginLeft: '-35px',
     width: '100%',
     height: '75px'
-
+  },
+  inputBtn: {
+    marginLeft: '-30px',
+    width: '75px',
+    height: '75px'
   }
 };
 

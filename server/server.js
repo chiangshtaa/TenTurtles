@@ -9,6 +9,7 @@ const axios = require('axios');
 const Clarifai = require('clarifai');
 const query = require('./query.js');
 const db = require('../database/schema.js');
+const _ = require('underscore');
 
 const app = express();
 
@@ -18,7 +19,6 @@ app.use(bodyParser.json());
 
 app.post('/search', (req, res) => {
   let data = req.body;
-  // console.log('data ', data);
   query.apiQuery(data, res);
 });
 
@@ -44,10 +44,8 @@ app.post('/clarifai', (req, res) => {
     });
   })
   .then(imageText => {
-    // console.log(imageText);
-    query.apiQuery({item: imageText[0]}, res);
+    res.send(imageText);
   });
-
 });
 
 app.post('/favorite', (req, res) => {
@@ -70,6 +68,18 @@ app.post('/favorite', (req, res) => {
       }
     });
   }
+});
+
+app.get('/images', (req, res) => {
+  let images = db.Image.find().then(results => {
+    console.log('images: ', results);
+    res.send(results);
+  });
+})
+
+app.post('/saveImage', (req, res) => {
+  let data = req.body
+  new db.Image({url: data.url, caption: data.item}).save()
 })
 
 app.listen(3000, function() {
