@@ -7,8 +7,10 @@ import Upload from './components/upload.jsx';
 import PairingList from './components/pairingList.jsx';
 import ImageCarousel from './components/imageCarousel.jsx';
 import { Line, Circle } from 'rc-progress';
+
 const helpers = require('../../server/helpers');
 import Background from '../dist/433ce5036a9f794f22d48bccd2208b0d.jpg';
+
 class App extends React.Component {
   constructor(props) {
     super(props);
