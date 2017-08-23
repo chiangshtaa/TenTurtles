@@ -1,4 +1,4 @@
-# Project Name
+# Paired
 
 > Food app that pairs recipes with wine and beer
 
