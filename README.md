@@ -39,8 +39,8 @@ From within the root directory:
 
 ```
 npm install
-> npm run react-dev
-> npm run server-dev
+> npm run build
+> npm run start
 > npm run db-start
 ```
 

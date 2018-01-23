@@ -19,7 +19,7 @@ const apiQuery = (data, res) => {
   let finalIngredients = [];
   // --------------------------------------- //
   // Iterate preference choices' for quering through recipe API //
-  let url = 'https://api.edamam.com/search?q=' + data.item;
+  let url = `https://api.edamam.com/search?q=' + ${data.item} + '&app_id=${api.recipe_appId}&app_key=${api.recipe_appkey}`;
   if (data.choices) {
     let choices = data.choices;
     for (let i = 0; i < choices.length; i++) {
@@ -27,9 +27,11 @@ const apiQuery = (data, res) => {
       url += '&health=' + choices[i];
     }
   }
+  console.log('here', url);
+  console.log(api.recipe_appId, 'BREAK', api.recipe_appkey);
   // ------------------------ Start Recipes' matching API ----------------------------- //
   // Please get your own App Id and App key //
-  axios.post(url, { "app_id": api.recipe_appId, "app_key": api.recipe_appkey })
+  axios.post(url)
   .then((result) => {
     // Refactor results //
     return helpers.recipes(result.data.hits);
@@ -45,15 +47,15 @@ const apiQuery = (data, res) => {
     });
   })
   // ------------------------ Start ingredients to wine pairing API ----------------------------- //
-  .then(ingredients => {
-    return Promise.map(ingredients, ingredient => {
-      // Push all ingredients for wines and beers query later //
-      finalIngredients.push(ingredient);
-      return axios.post('http://138.68.58.133/pairing', { "ingredients": ingredient }).then(result => {
-        return result.data;
-      });
-    });
-  })
+  // .then(ingredients => {
+  //   return Promise.map(ingredients, ingredient => {
+  //     // Push all ingredients for wines and beers query later //
+  //     finalIngredients.push(ingredient);
+  //     return axios.post('http://138.68.58.133/pairing', { "ingredients": ingredient }).then(result => {
+  //       return result.data;
+  //     });
+  //   });
+  // })
   // ------------------------ Start Wines' matching API ----------------------------- //
   .then(wines => {
     // Uncomment to use REAL data search //
@@ -78,15 +80,15 @@ const apiQuery = (data, res) => {
     });
   })
   // ------------------------ Start ingredients to beers pairing API ----------------------------- //
-  .then(() => {
-    return Promise.map(finalIngredients, array => {
-      return axios.post('http://138.68.58.133/beerpairing', { "ingredients": array })
-        .then(result => {
-          console.log('result: ', result.data);
-          return result.data;
-        });
-    });
-  })
+  // .then(() => {
+  //   return Promise.map(finalIngredients, array => {
+  //     return axios.post('http://138.68.58.133/beerpairing', { "ingredients": array })
+  //       .then(result => {
+  //         console.log('result: ', result.data);
+  //         return result.data;
+  //       });
+  //   });
+  // })
   // ------------------------ Start Beers' matching API ----------------------------- //
   //
   .then(beerIds => {
@@ -115,7 +117,7 @@ const apiQuery = (data, res) => {
     res.send(finalResults);
   })
   .catch(error => {
-    console.log('error: ', error);
+    console.log('Error: ', error, 'End');
   });
 };
 

@@ -137,7 +137,7 @@ export default class Upload extends React.Component {
               multiple={false}
               accept="image/*"
               onDrop={this.onImageDrop.bind(this)}>
-              <img style={styles.image} src="http://www.iconsdb.com/icons/preview/white/screenshot-xxl.png"></img>
+              <img style={styles.image} src="https://www.materialui.co/materialIcons/image/camera_alt_white_192x192.png"></img>
             </Dropzone>
           </div>
         </form>

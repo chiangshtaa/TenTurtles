@@ -31,7 +31,7 @@ app.post('/clarifai', (req, res) => {
   .predict(Clarifai.FOOD_MODEL, imageUrl)
   .then((response, error) => {
     if (error) {
-      console.log(error);
+      console.log('HERE', error);
     } else {
       return response;
     }
@@ -68,12 +68,12 @@ app.post('/favorite', (req, res) => {
   }
 });
 
-app.get('/images', (req, res) => {
-  let images = db.Image.find().then(results => {
-    console.log('images: ', results);
-    res.send(results);
-  });
-})
+// app.get('/images', (req, res) => {
+//   let images = db.Image.find().then(results => {
+//     console.log('images: ', results);
+//     res.send(results);
+//   });
+// })
 
 app.post('/saveImage', (req, res) => {
   let data = req.body

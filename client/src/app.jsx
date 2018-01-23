@@ -64,17 +64,17 @@ class App extends React.Component {
     });
   }
 
-  componentDidMount() {
-      $.ajax({
-        url: '/images',
-        method: 'GET',
-        success: data => {
-          this.setState({
-            images: data
-          });
-        }
-      })
-  }
+  // componentDidMount() {
+  //     $.ajax({
+  //       url: '/images',
+  //       method: 'GET',
+  //       success: data => {
+  //         this.setState({
+  //           images: data
+  //         });
+  //       }
+  //     })
+  // }
 
   setPairings(data) {
     this.setState({
@@ -125,13 +125,14 @@ class App extends React.Component {
 
           <hr />
 
-          <Row>
+          {/*<Row>
 
             <ImageCarousel images={this.state.images} />
 
           </Row>
 
           <hr />
+        */}
 
           <Row>
             <Col xs={12}>
