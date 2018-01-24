@@ -80,6 +80,6 @@ app.post('/saveImage', (req, res) => {
   new db.Image({url: data.url, caption: data.item}).save()
 })
 
-app.listen(3000, function() {
-  console.log('Connection established.  Listening on port 3000!');
+app.listen(8080, function() {
+  console.log('Connection established.  Listening on port 8080!');
 });
