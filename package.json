@@ -9,7 +9,7 @@
   },
   "scripts": {
     "build": "webpack --watch",
-    "start": "nodemon server/server.js",
+    "start": "node server/server.js",
     "db-start": "mongod --dbpath ./database/data/db",
     "heroku-build": "webpack",
     "postinstall": "npm run heroku-build"
