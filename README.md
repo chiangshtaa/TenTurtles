@@ -1,6 +1,6 @@
-# Project Name
+# Paired
 
-> Pithy project description
+> Food app that pairs recipes with wine and beer
 
 ## Team
 
