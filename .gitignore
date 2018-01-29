@@ -28,7 +28,7 @@ bundle.js
 node_modules/
 
 # API keys
-config.js
+
 
 # database
 database/data
